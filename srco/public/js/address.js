@@ -5,6 +5,27 @@ frappe.ui.form.on("Address", {
     refresh(frm) {
         set_cascading_queries(frm);
         toggle_google_map_button(frm);
+
+        //Field Hide
+        frm.set_df_property("address_line1", "hidden", 1);
+        frm.set_df_property("address_line2", "hidden", 1);
+        frm.set_df_property("city", "hidden", 1);
+        frm.set_df_property("county", "hidden", 1);
+        frm.set_df_property("state", "hidden", 1);
+        frm.set_df_property("pincode", "hidden", 1);
+        frm.set_df_property("fax", "hidden", 1);
+        frm.set_df_property("tax_category", "hidden", 1);
+    },
+
+    setup(frm) {
+        frm.set_df_property("address_line1", "hidden", 1);
+        frm.set_df_property("address_line2", "hidden", 1);
+        frm.set_df_property("city", "hidden", 1);
+        frm.set_df_property("county", "hidden", 1);
+        frm.set_df_property("state", "hidden", 1);
+        frm.set_df_property("pincode", "hidden", 1);
+        frm.set_df_property("fax", "hidden", 1);
+        frm.set_df_property("tax_category", "hidden", 1);
     },
 
     custom_province(frm) {
@@ -26,6 +47,18 @@ frappe.ui.form.on("Address", {
         update_full_address(frm);
     },
 
+    custom_postal_code(frm) {
+        update_full_address(frm);
+    },
+
+    custom_way_no(frm) {
+        update_full_address(frm);
+    },
+
+    custom_plot_no(frm) {
+        update_full_address(frm);
+    },
+
     custom_address_line(frm) {
         update_full_address(frm);
     },
@@ -40,6 +73,15 @@ frappe.ui.form.on("Address", {
 });
 
 function set_cascading_queries(frm) {
+    // Province filtered by Province (standard field: "province")
+    frm.set_query("custom_province", function(doc) {
+        return {
+            filters: {
+                "country": doc.country || "N/A"
+            }
+        };
+    });
+
     // City filtered by Province (standard field: "province")
     frm.set_query("custom_citys", function(doc) {
         return {
@@ -60,11 +102,14 @@ function set_cascading_queries(frm) {
 }
 
 function update_full_address(frm) {
-    if (frm.doc.custom_province && frm.doc.custom_citys && frm.doc.custom_area && frm.doc.custom_address_line) {
+    if (frm.doc.custom_province && frm.doc.custom_citys && frm.doc.custom_area && frm.doc.custom_address_line && frm.doc.custom_plot_no && frm.doc.custom_way_no) {
         const address = [
             frm.doc.custom_address_line,
+            frm.doc.custom_plot_no,
+            frm.doc.custom_way_no,
             frm.doc.custom_area,
             frm.doc.custom_citys,
+            frm.doc.custom_postal_code,
             frm.doc.custom_province
         ].join(", ");
         
@@ -72,7 +117,8 @@ function update_full_address(frm) {
         frm.refresh_field("custom_full_address");
         frm.set_value("address_line1", address);
         frm.set_value("city", frm.doc.custom_citys);
-        frm.set_value("county", frm.doc.custom_area);
+        frm.set_value("city", frm.doc.custom_citys);
+        frm.set_value("pincode", frm.doc.custom_postal_code);
         frm.set_value("state", frm.doc.custom_province);
     }
 }
