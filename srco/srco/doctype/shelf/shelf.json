@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "autoname": "field:shelf",
+ "creation": "2026-01-09 19:47:25.199686",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "shelf",
+  "block",
+  "column_break_hzem",
+  "warehouse"
+ ],
+ "fields": [
+  {
+   "fieldname": "shelf",
+   "fieldtype": "Data",
+   "label": "Shelf",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Block",
+   "options": "Block",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hzem",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "block.warehouse",
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Warehouse",
+   "options": "Warehouse",
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-09 19:49:57.123558",
+ "modified_by": "Administrator",
+ "module": "SRCo",
+ "name": "Shelf",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

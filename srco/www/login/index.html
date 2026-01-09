@@ -1,0 +1,285 @@
+{% extends "templates/web.html" %}
+{% block content %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<style>
+body{
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* FULL SCREEN WRAPPER */
+.login-wrapper{
+    width:100%;
+    height:100vh;
+    display:flex;
+}
+
+/* LEFT LOGIN PANEL (40%) */
+.login-left{
+    width:40%;
+    background: linear-gradient(50deg, #082785, #da3c20);
+    color:#fff;
+    padding:60px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+/* LOGIN CARD */
+.login-content{
+    background:#fff;
+    color:#000;
+    padding:45px;
+    border-radius:18px;
+    width:100%;
+    max-width:420px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.25);
+}
+
+.login-content h2{
+    margin-bottom:30px;
+    font-size:28px;
+    font-weight:700;
+    color:#000;
+}
+
+/* RIGHT BACKGROUND PANEL (60%) */
+.login-right{
+    width:60%;
+    background: url("/assets/srco/img/srco_bg.jpg") no-repeat center center;
+    background-size:cover;
+}
+
+/* INPUTS */
+.input-group{
+    margin-bottom:25px;
+    position:relative;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px 45px 14px 15px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    font-size:14px;
+}
+
+.input-group i{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#777;
+    cursor:pointer;
+}
+
+/* BUTTON */
+.login-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background: linear-gradient(135deg,#0f4cfd,#0066ff);
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.login-btn:hover{
+    opacity:0.9;
+}
+
+/* ERROR + LOADER */
+.error-msg{
+    display:none;
+    color:red;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.loader{
+    display:none;
+    text-align:center;
+    margin-bottom:10px;
+    color:#0f4cfd;
+}
+
+/* FOOTER */
+.login-footer{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:rgba(0,0,0,0.35);
+    padding:12px 0;
+    text-align:center;
+    backdrop-filter: blur(6px);
+    z-index:999;
+}
+
+.login-footer .copyright-text{
+    margin:0;
+    color:#fff;
+    font-size:13px;
+    opacity:0.9;
+}
+
+.login-footer .copyright-text a{
+    color:#ffffff;
+    font-weight:600;
+    text-decoration:none;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+    .login-wrapper{
+        flex-direction:column;
+    }
+
+    .login-left{
+        width:100%;
+        padding:40px;
+        align-items:center;
+    }
+
+    .login-right{
+        width:100%;
+        height:40vh;
+    }
+
+    .login-content{
+        padding:35px;
+    }
+}
+</style>
+
+<form class="form-signin form-login" onsubmit="return false;">
+    <div class="login-wrapper">
+
+        <!-- LEFT LOGIN PANEL -->
+        <div class="login-left">
+
+            <div class="login-content page-card page-card-body">
+
+                <img src="/assets/srco/img/srco_logo.jpeg" alt="" width="150" height="50">
+                <br><br>
+
+                <h2>Login</h2>
+
+                <div class="input-group">
+                    <input type="text" id="login_email" placeholder="Email address">
+                    <i class="fa fa-user"></i>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="login_password" placeholder="Password">
+                    <i class="fa fa-eye-slash" id="togglePassword"></i>
+                </div>
+
+                <!-- ERROR MESSAGE -->
+                <div class="error-msg" id="errorMsg"></div>
+
+                <!-- LOADER -->
+                <div class="loader" id="loader">
+                    <i class="fa fa-spinner fa-spin"></i> Logging in...
+                </div>
+
+                <button class="login-btn" id="loginBtn" type="button">Login</button>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT BACKGROUND PANEL -->
+        <div class="login-right"></div>
+
+    </div>
+</form>
+
+<!-- FOOTER -->
+<div class="login-footer">
+    <p class="copyright-text">
+        Copyright 2026
+        <a href="https://www.inshasis.com/">InshaSiS Technologies</a> - All Rights Reserved.
+    </p>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+{% include "templates/includes/login/login.js" %}
+
+$(document).ready(function() {
+    $(".web-footer").hide();
+    $(".navbar").hide();
+});
+
+// Password Toggle
+const passwordField = document.getElementById("login_password");
+const togglePassword = document.getElementById("togglePassword");
+
+togglePassword.addEventListener("click", function () {
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        togglePassword.classList.remove("fa-eye-slash");
+        togglePassword.classList.add("fa-eye");
+    } else {
+        passwordField.type = "password";
+        togglePassword.classList.remove("fa-eye");
+        togglePassword.classList.add("fa-eye-slash");
+    }
+});
+
+// LOGIN HANDLER
+$("#loginBtn").click(function(){
+
+    let email = $("#login_email").val();
+    let password = $("#login_password").val();
+
+    if(!email || !password){
+        showError("Please enter email and password");
+        return;
+    }
+
+    $("#errorMsg").hide();
+    $("#loader").show();
+    $("#loginBtn").prop("disabled", true);
+
+    frappe.call({
+        method: "login",
+        args: {
+            usr: email,
+            pwd: password
+        },
+        callback: function(r) {
+
+            $("#loader").hide();
+            $("#loginBtn").prop("disabled", false);
+
+            if(r.message === "Logged In"){
+                window.location.href = "/app";
+            }else{
+                showError("Invalid email or password");
+            }
+        },
+        error: function() {
+            $("#loader").hide();
+            $("#loginBtn").prop("disabled", false);
+            showError("Login failed. Please try again.");
+        }
+    });
+
+});
+
+function showError(msg){
+    $("#errorMsg").text(msg).fadeIn();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,295 @@
+{% extends "templates/web.html" %}
+{% block content %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<style>
+body{
+    background: url("/assets/srco/img/srco_bg.jpg");
+    /* background: linear-gradient(135deg, #0f4cfd, #020024); */
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.login-wrapper{
+    width:90%;
+    max-width:1100px;
+    background:#fff;
+    border-radius:18px;
+    display:flex;
+    overflow:hidden;
+    box-shadow:0 25px 60px rgba(0,0,0,0.2);
+}
+
+/* LEFT PANEL */
+.login-left{
+    width:50%;
+    background: linear-gradient(135deg, #0f4cfd, #0066ff);
+    color:#fff;
+    padding:60px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.login-left h1{
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.login-left p{
+    font-size:15px;
+    opacity:0.9;
+    line-height:1.7;
+}
+
+.login-left button{
+    margin-top:30px;
+    width:150px;
+    padding:12px;
+    border:none;
+    border-radius:25px;
+    background:#fff;
+    color:#0f4cfd;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* RIGHT PANEL */
+.login-right{
+    width:50%;
+    padding:70px 60px;
+}
+
+.login-right h2{
+    margin-bottom:30px;
+    font-size:28px;
+    font-weight:700;
+}
+
+.input-group{
+    margin-bottom:25px;
+    position:relative;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px 45px 14px 15px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    font-size:14px;
+}
+
+.input-group i{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#777;
+    cursor:pointer;
+}
+
+.login-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background: linear-gradient(135deg,#0f4cfd,#0066ff);
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.login-btn:hover{
+    opacity:0.9;
+}
+
+/* ERROR + LOADER */
+.error-msg{
+    display:none;
+    color:red;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.loader{
+    display:none;
+    text-align:center;
+    margin-bottom:10px;
+    color:#0f4cfd;
+}
+
+/* FOOTER */
+.login-footer{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:rgba(0,0,0,0.35);
+    padding:12px 0;
+    text-align:center;
+    backdrop-filter: blur(6px);
+}
+
+.login-footer .copyright-text{
+    margin:0;
+    color:#fff;
+    font-size:13px;
+    opacity:0.9;
+}
+
+.login-footer .copyright-text a{
+    color:#ffffff;
+    font-weight:600;
+    text-decoration:none;
+}
+
+
+/* MOBILE */
+@media(max-width:900px){
+    .login-wrapper{
+        flex-direction:column;
+    }
+    .login-left{
+        width:100%;
+        padding:40px;
+        text-align:center;
+    }
+    .login-right{
+        width:100%;
+        padding:40px;
+    }
+}
+</style>
+
+<form class="form-signin form-login" onsubmit="return false;">
+    <div class="login-wrapper">
+
+        <!-- LEFT BRAND PANEL -->
+        <div class="login-left">
+            <img class="img_logo" src="/assets/srco/img/srco_white.png" alt="" width="150" height="50">
+            <br>
+            <h1>Hello,<br>Welcome!</h1>
+            <p>
+                Secure ERP login system for managing sales, inventory,
+                finance and operations in one powerful platform.
+            </p>
+            <!-- <button type="button">View more</button> -->
+        </div>
+
+        <!-- RIGHT LOGIN PANEL -->
+        <div class="login-right login-content page-card page-card-body">
+
+            <h2>Login</h2>
+
+            <div class="input-group">
+                <input type="text" id="login_email" placeholder="Email address">
+                <i class="fa fa-user"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="login_password" placeholder="Password">
+                <i class="fa fa-eye-slash" id="togglePassword"></i>
+            </div>
+
+            <!-- ERROR MESSAGE -->
+            <div class="error-msg" id="errorMsg"></div>
+
+            <!-- LOADER -->
+            <div class="loader" id="loader">
+                <i class="fa fa-spinner fa-spin"></i> Logging in...
+            </div>
+
+            <button class="login-btn" id="loginBtn" type="button">Login</button>
+
+        </div>
+
+    </div>
+</form>
+
+<div class="login-footer">
+    <p class="copyright-text">
+        Copyright 2026
+        <a href="https://www.inshasis.com/">InshaSiS Technologies</a> - All Rights Reserved.
+    </p>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script>
+{% include "templates/includes/login/login.js"  %}
+
+$(document).ready(function() {
+    $(".web-footer").hide();
+    $(".navbar").hide();
+});
+
+// Password Toggle
+const passwordField = document.getElementById("login_password");
+const togglePassword = document.getElementById("togglePassword");
+
+togglePassword.addEventListener("click", function () {
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        togglePassword.classList.remove("fa-eye-slash");
+        togglePassword.classList.add("fa-eye");
+    } else {
+        passwordField.type = "password";
+        togglePassword.classList.remove("fa-eye");
+        togglePassword.classList.add("fa-eye-slash");
+    }
+});
+
+// LOGIN HANDLER
+$("#loginBtn").click(function(){
+
+    let email = $("#login_email").val();
+    let password = $("#login_password").val();
+
+    if(!email || !password){
+        showError("Please enter email and password");
+        return;
+    }
+
+    $("#errorMsg").hide();
+    $("#loader").show();
+    $("#loginBtn").prop("disabled", true);
+
+    frappe.call({
+        method: "login",
+        args: {
+            usr: email,
+            pwd: password
+        },
+        callback: function(r) {
+
+            $("#loader").hide();
+            $("#loginBtn").prop("disabled", false);
+
+            if(r.message === "Logged In"){
+                window.location.href = "/app";
+            }else{
+                showError("Invalid email or password");
+            }
+        },
+        error: function() {
+            $("#loader").hide();
+            $("#loginBtn").prop("disabled", false);
+            showError("Login failed. Please try again.");
+        }
+    });
+
+});
+
+function showError(msg){
+    $("#errorMsg").text(msg).fadeIn();
+}
+</script>
+{% endblock %}

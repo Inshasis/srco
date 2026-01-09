@@ -1,0 +1,42 @@
+[
+ {
+  "apply_to_all_doctypes": 1,
+  "condition": null,
+  "dimension_name": "Block",
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Inventory Dimension",
+  "document_type": null,
+  "fetch_from_parent": "Block",
+  "istable": 0,
+  "mandatory_depends_on": null,
+  "modified": "2026-01-09 19:54:33.286912",
+  "name": "Block",
+  "reference_document": "Block",
+  "reqd": 0,
+  "source_fieldname": "block",
+  "target_fieldname": "block",
+  "type_of_transaction": "Both",
+  "validate_negative_stock": 0
+ },
+ {
+  "apply_to_all_doctypes": 1,
+  "condition": null,
+  "dimension_name": "Shelf",
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Inventory Dimension",
+  "document_type": null,
+  "fetch_from_parent": "Shelf",
+  "istable": 0,
+  "mandatory_depends_on": null,
+  "modified": "2026-01-09 19:55:24.484959",
+  "name": "Shelf",
+  "reference_document": "Shelf",
+  "reqd": 0,
+  "source_fieldname": "shelf",
+  "target_fieldname": "shelf",
+  "type_of_transaction": "Both",
+  "validate_negative_stock": 0
+ }
+]

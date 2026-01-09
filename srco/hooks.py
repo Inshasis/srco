@@ -242,3 +242,19 @@ doctype_js = {"Address" : "public/js/address.js"}
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+#Fixture
+
+fixtures = [
+    {"dt": "Inventory Dimension", "filters": [
+        [
+            "name",
+            "in",
+            {
+				"Shelf",
+                "Block"
+			}
+        ]
+    ]}
+]
+
+# bench --site demo.local export-fixtures --app srco
