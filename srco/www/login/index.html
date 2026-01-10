@@ -91,8 +91,9 @@ body{
     margin-top:10px;
 }
 
-.login-btn:hover{
-    opacity:0.9;
+.login-btn:disabled{
+    opacity:0.7;
+    cursor:not-allowed;
 }
 
 /* ERROR + LOADER */
@@ -101,6 +102,7 @@ body{
     color:red;
     margin-bottom:10px;
     font-size:14px;
+    text-align:center;
 }
 
 .loader{
@@ -214,37 +216,25 @@ body{
 
 {% block script %}
 <script>
-{% include "templates/includes/login/login.js" %}
-
-$(document).ready(function() {
-    $(".web-footer").hide();
+$(document).ready(function(){
     $(".navbar").hide();
+    $(".web-footer").hide();
 });
 
-// Password Toggle
-const passwordField = document.getElementById("login_password");
-const togglePassword = document.getElementById("togglePassword");
-
-togglePassword.addEventListener("click", function () {
-    if (passwordField.type === "password") {
-        passwordField.type = "text";
-        togglePassword.classList.remove("fa-eye-slash");
-        togglePassword.classList.add("fa-eye");
-    } else {
-        passwordField.type = "password";
-        togglePassword.classList.remove("fa-eye");
-        togglePassword.classList.add("fa-eye-slash");
-    }
-});
-
-// LOGIN HANDLER
+/* LOGIN */
 $("#loginBtn").click(function(){
 
-    let email = $("#login_email").val();
-    let password = $("#login_password").val();
+    let email = $("#login_email").val().trim();
+    let password = $("#login_password").val().trim();
 
     if(!email || !password){
         showError("Please enter email and password");
+
+        frappe.show_alert({
+            message: "Please enter email and password",
+            indicator: "red"
+        }, 5);
+
         return;
     }
 
@@ -253,7 +243,7 @@ $("#loginBtn").click(function(){
     $("#loginBtn").prop("disabled", true);
 
     frappe.call({
-        method: "login",
+        method: "srco.www.login.api.login",
         args: {
             usr: email,
             pwd: password
@@ -263,16 +253,17 @@ $("#loginBtn").click(function(){
             $("#loader").hide();
             $("#loginBtn").prop("disabled", false);
 
-            if(r.message === "Logged In"){
+            if(r.message.status === "success"){
                 window.location.href = "/app";
-            }else{
-                showError("Invalid email or password");
+            } else {
+
+                showError(r.message.message);
+
+                frappe.show_alert({
+                    message: r.message.message,
+                    indicator: "red"
+                }, 5);
             }
-        },
-        error: function() {
-            $("#loader").hide();
-            $("#loginBtn").prop("disabled", false);
-            showError("Login failed. Please try again.");
         }
     });
 
@@ -282,4 +273,6 @@ function showError(msg){
     $("#errorMsg").text(msg).fadeIn();
 }
 </script>
+
+
 {% endblock %}
