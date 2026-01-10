@@ -102,8 +102,9 @@ function set_cascading_queries(frm) {
 }
 
 function update_full_address(frm) {
-    if (frm.doc.custom_province && frm.doc.custom_citys && frm.doc.custom_area && frm.doc.custom_address_line && frm.doc.custom_plot_no && frm.doc.custom_way_no) {
-        const address = [
+    if (frm.doc.custom_province && frm.doc.custom_citys) {
+
+        const address_parts = [
             frm.doc.custom_address_line,
             frm.doc.custom_plot_no,
             frm.doc.custom_way_no,
@@ -111,17 +112,21 @@ function update_full_address(frm) {
             frm.doc.custom_citys,
             frm.doc.custom_postal_code,
             frm.doc.custom_province
-        ].join(", ");
-        
+        ].filter(value => value);   // remove empty, null, undefined
+
+        const address = address_parts.join(", ");
+
         frm.set_value("custom_full_address", address);
         frm.refresh_field("custom_full_address");
+
         frm.set_value("address_line1", address);
         frm.set_value("city", frm.doc.custom_citys);
-        frm.set_value("city", frm.doc.custom_citys);
-        frm.set_value("pincode", frm.doc.custom_postal_code);
+        frm.set_value("county", frm.doc.custom_area || "");
+        frm.set_value("pincode", frm.doc.custom_postal_code || "");
         frm.set_value("state", frm.doc.custom_province);
     }
 }
+
 
 function toggle_google_map_button(frm) {
     frm.set_df_property("custom_open_map", "hidden", frm.doc.custom_google_map_link ? 0 : 1);
