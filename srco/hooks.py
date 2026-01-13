@@ -258,6 +258,15 @@ fixtures = [
                 "Block"
 			}
         ]
+    ]},
+    {"dt": "Customer Group", "filters": [
+        [
+            "name",
+            "in",
+            {
+				"Walking Customer"
+			}
+        ]
     ]}
 ]
 
