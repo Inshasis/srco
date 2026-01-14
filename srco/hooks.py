@@ -28,6 +28,8 @@ app_license = "mit"
 # app_include_css = "/assets/srco/css/srco.css"
 # app_include_js = "/assets/srco/js/srco.js"
 
+
+
 # include js, css files in header of web template
 # web_include_css = "/assets/srco/css/srco.css"
 # web_include_js = "/assets/srco/js/srco.js"
@@ -46,7 +48,8 @@ app_license = "mit"
 doctype_js = {
     "Address" : "public/js/address.js",
     "Delivery Note" : "public/js/delivery_note.js",
-    "Purchase Receipt" : "public/js/purchase_receipt.js"
+    "Purchase Receipt" : "public/js/purchase_receipt.js",
+    "Stock Entry" : "public/js/stock_entry.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -181,6 +184,11 @@ doctype_js = {
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "srco.event.get_events"
 # }
+
+# override_whitelisted_methods = {
+#     "erpnext.stock.doctype.warehouse.warehouse.get_warehouse_with_qty": "srco.srco.api.warehouse.get_warehouse_with_qty"
+# }
+
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
