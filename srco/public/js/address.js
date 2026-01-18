@@ -137,3 +137,39 @@ frappe.ui.form.on("Address", "custom_open_map", function(frm) {
         window.open(frm.doc.custom_google_map_link);
     }
 });
+
+
+// Auto Address Add In Branch
+frappe.ui.form.on("Address", {
+    after_save(frm) {
+        let branch_link = frm.doc.links?.find(l => l.link_doctype === "Branch");
+
+        if (branch_link) {
+            frappe.call({
+                method: "srco.api.branch.update_branch_address",
+                args: {
+                    branch: branch_link.link_name,
+                    address: frm.doc.address_line1 || frm.doc.address_title,
+                    google_map_link: frm.doc.custom_google_map_link || frm.doc.google_map_link
+                }
+            });
+        }
+    }
+});
+
+
+frappe.ui.form.on("Address", {
+    validate(frm) {
+        let branches = [];
+
+        (frm.doc.links || []).forEach(row => {
+            if (row.link_doctype === "Branch" && row.link_name) {
+                branches.push(row.link_name);
+            }
+        });
+
+        if (branches.length > 1) {
+            frappe.throw("Only one Branch is allowed per Address");
+        }
+    }
+});

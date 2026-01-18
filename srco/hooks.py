@@ -49,7 +49,8 @@ doctype_js = {
     "Address" : "public/js/address.js",
     "Delivery Note" : "public/js/delivery_note.js",
     "Purchase Receipt" : "public/js/purchase_receipt.js",
-    "Stock Entry" : "public/js/stock_entry.js"
+    "Stock Entry" : "public/js/stock_entry.js",
+    "Branch" : "public/js/branch.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -144,13 +145,13 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "Address": {
+        "validate": "srco.srco.doctype.address.validate",
+        "before_save": "srco.srco.doctype.address.before_save"
+    }
+}
+
 
 # Scheduled Tasks
 # ---------------
