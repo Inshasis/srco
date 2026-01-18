@@ -4,6 +4,12 @@
 
 frappe.ui.form.on("Branch", {
     refresh(frm) {
+
+        const has_link = frm.doc.custom_google_map_link ? true : false;
+        
+        // Hide the button if no link
+        frm.set_df_property('custom_open_map', 'hidden', !has_link);
+
         if (!frm.is_new()) {
             frm.add_custom_button("Address", () => {
                 frappe.call({
@@ -46,12 +52,5 @@ frappe.ui.form.on("Branch", {
                 });
             });
         }
-    }
-});
-
-
-frappe.ui.form.on("Branch", "custom_open_map", function(frm) {
-    if (frm.doc.custom_google_map_link) {
-        window.open(frm.doc.custom_google_map_link);
     }
 });
