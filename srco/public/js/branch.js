@@ -48,3 +48,10 @@ frappe.ui.form.on("Branch", {
         }
     }
 });
+
+
+frappe.ui.form.on("Branch", "custom_open_map", function(frm) {
+    if (frm.doc.custom_google_map_link) {
+        window.open(frm.doc.custom_google_map_link);
+    }
+});

@@ -148,7 +148,7 @@ doctype_js = {
 doc_events = {
     "Address": {
         "validate": "srco.srco.doctype.address.validate",
-        "before_save": "srco.srco.doctype.address.before_save"
+        "before_save": "srco.srco.doctype.address.validate"
     }
 }
 
