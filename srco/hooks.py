@@ -50,7 +50,8 @@ doctype_js = {
     "Delivery Note" : "public/js/delivery_note.js",
     "Purchase Receipt" : "public/js/purchase_receipt.js",
     "Stock Entry" : "public/js/stock_entry.js",
-    "Branch" : "public/js/branch.js"
+    "Branch" : "public/js/branch.js",
+    "Employee" : "public/js/employee.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -149,12 +150,21 @@ doc_events = {
     "Address": {
         "validate": "srco.srco.doctype.address.validate",
         "before_save": "srco.srco.doctype.address.validate"
-    }
+    },
+    # "Employee": {
+    #     "validate": "srco.srco.doctype.employee.set_age_and_experience"
+    # }
 }
 
 
 # Scheduled Tasks
 # ---------------
+
+scheduler_events = {
+    "monthly": [
+        "srco.srco.doctype.employee.monthly_update_employee_age_experience"
+    ]
+}
 
 # scheduler_events = {
 # 	"all": [
