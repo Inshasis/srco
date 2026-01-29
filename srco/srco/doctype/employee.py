@@ -2,64 +2,68 @@
 # # For license information, please see license.txt
 
 import frappe
-from frappe import _
 import traceback
-from datetime import datetime
+from frappe.utils import getdate, today
 
 
-@frappe.whitelist()
-def age_calculation(doc, method=None):
-    if doc.date_of_birth:
-        try:
-            dob = datetime.strptime(doc.date_of_birth, "%Y-%m-%d").date()
-            today = datetime.today().date()
+def calculate_years_months(from_date):
+    from_date = getdate(from_date)
+    to_date = getdate(today())
 
-            # Calculate years
-            years = today.year - dob.year
-            months = today.month - dob.month
+    years = to_date.year - from_date.year
+    months = to_date.month - from_date.month
 
-            # Adjust if birthday not reached this year
-            if today.day < dob.day:
-                months -= 1
+    if to_date.day < from_date.day:
+        months -= 1
 
-            if months < 0:
-                years -= 1
-                months += 12
+    if months < 0:
+        years -= 1
+        months += 12
 
-            age_string = f"{years}Y {months}M"
-
-            # Save age only if changed
-            if doc.custom_age != age_string:
-                doc.db_set("custom_age", age_string, update_modified=False)
-
-        except Exception:
-            frappe.log_error(traceback.format_exc(), "Age Calculation Error")
+    return f"{years}Y {months}M"
 
 
-@frappe.whitelist()
-def experince_calculation(doc, method=None):
-    if doc.date_of_joining:
-        try:
-            exp = datetime.strptime(doc.date_of_joining, "%Y-%m-%d").date()
-            today = datetime.today().date()
+def set_age_and_experience(doc, method=None):
+    try:
+        if doc.date_of_birth:
+            age = calculate_years_months(doc.date_of_birth)
+            if doc.custom_age != age:
+                doc.db_set("custom_age", age, update_modified=False)
 
-            # Calculate years
-            years = today.year - exp.year
-            months = today.month - exp.month
+        if doc.date_of_joining:
+            exp = calculate_years_months(doc.date_of_joining)
+            if doc.custom_experience != exp:
+                doc.db_set("custom_experience", exp, update_modified=False)
 
-            # Adjust if birthday not reached this year
-            if today.day < exp.day:
-                months -= 1
+    except Exception:
+        frappe.log_error(traceback.format_exc(), "Employee Age/Experience Calculation Error")
 
-            if months < 0:
-                years -= 1
-                months += 12
 
-            exp_string = f"{years}Y {months}M"
+# Monthly Scheduler
+def monthly_update_employee_age_experience():
+    try:
+        employees = frappe.get_all(
+            "Employee",
+            filters={"status": "Active"},
+            fields=["name", "date_of_birth", "date_of_joining"]
+        )
 
-            # Save age only if changed
-            if doc.custom_experience != exp_string:
-                doc.db_set("custom_experience", exp_string, update_modified=False)
+        for emp in employees:
+            updates = {}
 
-        except Exception:
-            frappe.log_error(traceback.format_exc(), "Age Calculation Error")
+            if emp.date_of_birth:
+                updates["custom_age"] = calculate_years_months(emp.date_of_birth)
+
+            if emp.date_of_joining:
+                updates["custom_experience"] = calculate_years_months(emp.date_of_joining)
+
+            if updates:
+                frappe.db.set_value("Employee", emp.name, updates, update_modified=False)
+
+        frappe.db.commit()
+
+    except Exception:
+        frappe.log_error(
+            traceback.format_exc(),
+            "Monthly Employee Age & Experience Scheduler Error"
+        )
