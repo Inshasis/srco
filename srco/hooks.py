@@ -149,6 +149,10 @@ doc_events = {
     "Address": {
         "validate": "srco.srco.doctype.address.validate",
         "before_save": "srco.srco.doctype.address.validate"
+    },
+    "Employee": {
+        "validate": "srco.srco.doctype.employee.age_calculation",
+        "validate": "srco.srco.doctype.employee.experince_calculation"
     }
 }
 
