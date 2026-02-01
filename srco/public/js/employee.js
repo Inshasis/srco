@@ -25,7 +25,7 @@ frappe.ui.form.on("Employee", {
                 const expDuration = moment.duration(moment().diff(moment(doj)));
                 const expYears = expDuration.years();
                 const expMonths = expDuration.months();
-                const expText = `${expYears}Y ${expMonths}M`;
+                const expText = `${expYears}-${expMonths}`;
 
                 // Set values
                 frm.set_value("custom_age", ageText);

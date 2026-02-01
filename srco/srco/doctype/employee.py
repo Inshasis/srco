@@ -20,7 +20,7 @@ def calculate_years_months(from_date):
         years -= 1
         months += 12
 
-    return f"{years}Y {months}M"
+    return f"{years}-{months}"
 
 
 def set_age_and_experience(doc, method=None):
